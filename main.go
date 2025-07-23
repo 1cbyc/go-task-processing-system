@@ -75,32 +75,17 @@ func setupHTTPServer(cfg *config.Config, d *dispatcher.Dispatcher) *http.Server 
 func healthHandler(d *dispatcher.Dispatcher) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		health := d.GetHealth()
-		response := map[string]interface{}{
-			"status":    "healthy",
-			"timestamp": time.Now(),
-			"dispatcher": map[string]interface{}{
-				"healthy":    health.IsHealthy,
-				"last_check": health.LastCheck,
-			},
-		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, `{"status":"healthy","timestamp":"%s"}`, time.Now().Format(time.RFC3339))
+		fmt.Fprintf(w, `{"status":"healthy","timestamp":"%s","dispatcher_healthy":%t}`,
+			time.Now().Format(time.RFC3339), health.IsHealthy)
 	}
 }
 
 func statsHandler(d *dispatcher.Dispatcher) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		stats := d.GetStats()
-		response := map[string]interface{}{
-			"jobs_submitted": stats.JobsSubmitted,
-			"jobs_completed": stats.JobsCompleted,
-			"jobs_failed":    stats.JobsFailed,
-			"workers_active": stats.WorkersActive,
-			"queue_size":     stats.QueueSize,
-			"uptime":         time.Since(stats.StartTime).String(),
-		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
