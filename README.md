@@ -181,19 +181,6 @@ The system consists of several key components:
 
 ## Development
 
-### Project Structure
-
-```
-.
-├── config/          # Configuration management
-├── dispatcher/      # Job dispatcher and worker pool
-├── job/            # Job definition and lifecycle
-├── worker/         # Worker implementation
-├── docs/           # Documentation
-├── main.go         # Application entry point
-└── go.mod          # Go module definition
-```
-
 ### Building
 
 Build the application:
